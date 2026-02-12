@@ -22,14 +22,13 @@ public class AddReservationServlet extends HttpServlet {
 
         ReservationDAO dao = new ReservationDAO();
         boolean isSuccess = dao.addReservation(name, address, contact, roomType, checkIn, checkOut);
+
         if (isSuccess) {
+            //dashboard success message
             response.sendRedirect("dashboard.jsp?status=success");
         } else {
+            //error message
             response.sendRedirect("dashboard.jsp?status=error");
         }
-
-
-
-
     }
 }

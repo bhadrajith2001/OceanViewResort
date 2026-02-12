@@ -291,3 +291,36 @@ form > .input-group {
     transform: translateY(-3px);
     box-shadow: 0 10px 25px rgba(44, 161, 189, 0.5);
 }
+
+/* Table Styles */
+
+.table-glass-box {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    margin-top: 30px;
+    color: #fff;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.styled-table th, .styled-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+}
+
+.styled-table th {
+    background-color: rgba(44, 161, 189, 0.3);
+    color: #2ca1bd;
+    font-weight: 600;
+}

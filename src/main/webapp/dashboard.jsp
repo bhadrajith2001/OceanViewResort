@@ -76,6 +76,43 @@
     </div>
 </div>
 
+<div class="table-glass-box" style="margin-top: 30px;">
+    <h3>Current Reservations</h3>
+    <table class="styled-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Guest Name</th>
+            <th>Room Type</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
+            <th>Total Bill (Rs.)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%
+
+            com.oceanview.dao.ReservationDAO dao = new com.oceanview.dao.ReservationDAO();
+            java.util.List<com.oceanview.models.Reservation> list = dao.getAllReservations();
+
+
+            for(com.oceanview.models.Reservation r : list) {
+        %>
+        <tr>
+            <td><%= r.getId() %></td>
+            <td><%= r.getGuestName() %></td>
+            <td><span class="badge"><%= r.getRoomType() %></span></td>
+            <td><%= r.getCheckIn() %></td>
+            <td><%= r.getCheckOut() %></td>
+            <td style="font-weight: bold; color: #2ed573;">
+                Rs. <%= String.format("%,.2f", r.getTotalBill()) %>
+            </td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+</div>
+
 <script>
 
     let today = new Date().toISOString().split('T')[0];
