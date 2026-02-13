@@ -87,16 +87,17 @@
             <th>Check-In</th>
             <th>Check-Out</th>
             <th>Total Bill (Rs.)</th>
-        </tr>
+            <th>Action</th> </tr>
         </thead>
         <tbody>
         <%
-
             com.oceanview.dao.ReservationDAO dao = new com.oceanview.dao.ReservationDAO();
             java.util.List<com.oceanview.models.Reservation> list = dao.getAllReservations();
 
+            if(list != null) {
+                for(com.oceanview.models.Reservation r : list) {
 
-            for(com.oceanview.models.Reservation r : list) {
+                    String totalFormatted = String.format("%,.2f", r.getTotalBill());
         %>
         <tr>
             <td><%= r.getId() %></td>
@@ -104,11 +105,15 @@
             <td><span class="badge"><%= r.getRoomType() %></span></td>
             <td><%= r.getCheckIn() %></td>
             <td><%= r.getCheckOut() %></td>
-            <td style="font-weight: bold; color: #2ed573;">
-                Rs. <%= String.format("%,.2f", r.getTotalBill()) %>
+            <td style="font-weight: bold; color: #2ed573;">Rs. <%= totalFormatted %></td>
+
+            <td>
+                <a href="bill.jsp?id=<%=r.getId()%>&name=<%=r.getGuestName()%>&room=<%=r.getRoomType()%>&in=<%=r.getCheckIn()%>&out=<%=r.getCheckOut()%>&total=<%=totalFormatted%>"
+                   class="bill-btn" target="_blank">View Bill</a>
             </td>
         </tr>
-        <% } %>
+        <%      }
+        } %>
         </tbody>
     </table>
 </div>

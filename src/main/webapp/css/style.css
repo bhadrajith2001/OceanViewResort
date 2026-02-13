@@ -324,3 +324,19 @@ form > .input-group {
     color: #2ca1bd;
     font-weight: 600;
 }
+
+.bill-btn
+{
+    background: #ff9f43;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.bill-btn:hover {
+    background: #e58e26;
+    color: white;
+}
