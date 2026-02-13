@@ -110,6 +110,13 @@
             <td>
                 <a href="bill.jsp?id=<%=r.getId()%>&name=<%=r.getGuestName()%>&room=<%=r.getRoomType()%>&in=<%=r.getCheckIn()%>&out=<%=r.getCheckOut()%>&total=<%=totalFormatted%>"
                    class="bill-btn" target="_blank">View Bill</a>
+
+                <a href="deleteReservationServlet?id=<%=r.getId()%>"
+                   class="delete-btn"
+                   onclick="return confirm('Are you sure you want to delete this reservation?');">
+                    Delete
+                </a>
+
             </td>
         </tr>
         <%      }

@@ -340,3 +340,18 @@ form > .input-group {
     background: #e58e26;
     color: white;
 }
+
+.delete-btn {
+    background: #ff4757;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 5px;
+    transition: 0.3s;
+}
+.delete-btn:hover {
+    background: #ff6b81;
+}

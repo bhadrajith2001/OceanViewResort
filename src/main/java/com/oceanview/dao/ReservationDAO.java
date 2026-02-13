@@ -55,4 +55,24 @@ public class ReservationDAO {
         return list;
     }
 
+    //Delete booking
+
+    public boolean deleteReservation(int id) {
+        String query = "DELETE FROM reservations WHERE reservation_no = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            int rowsDeleted = stmt.executeUpdate();
+            return rowsDeleted > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    
+
 }
