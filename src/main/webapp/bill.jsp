@@ -74,7 +74,13 @@
 </head>
 <body>
 
+<jsp:include page="header.jsp" />
+
+<div class="dashboard-wrapper"> </div>
+
+
 <div class="invoice-box">
+
     <div class="header">
         <div>
             <h1>Ocean View Resort</h1>
@@ -127,6 +133,8 @@
         <a href="dashboard.jsp" style="color: #888; text-decoration: none; font-size: 12px;">Go Back</a>
     </div>
 </div>
+
+<jsp:include page="footer.jsp" />
 
 </body>
 </html>

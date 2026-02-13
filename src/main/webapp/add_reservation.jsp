@@ -16,13 +16,11 @@
 
 <body class="dashboard-body">
 
-<div class="glass-nav">
-    <h2>Ocean View Resort</h2>
-    <div class="user-info">
-        <a href="dashboard.jsp" class="nav-link">Home</a>
-        <a href="logoutServlet" class="logout-btn">Logout</a>
-    </div>
-</div>
+<jsp:include page="header.jsp" />
+
+<div class="dashboard-wrapper"> </div>
+
+
 
 <div class="dashboard-container">
     <div class="form-glass-box">
@@ -78,6 +76,8 @@
     </div>
 </div>
 
+<jsp:include page="footer.jsp" />
+
 <script>
     let today = new Date().toISOString().split('T')[0];
     document.getElementById("checkInDate").setAttribute('min', today);
@@ -105,6 +105,17 @@
         }
         return isValid;
     }
+
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        if (status === 'unavailable') {
+        alert("⚠️ ROOM UNAVAILABLE!\n\nSomeone has already booked this room for these dates.\nPlease select a different date or room type.");
+    } else if (status === 'error') {
+        alert("❌ ERROR!\n\nSomething went wrong. Please try again.");
+    }
+
 </script>
 </body>
 </html>

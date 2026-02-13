@@ -10,13 +10,9 @@
 
 <body class="dashboard-body">
 
-<div class="glass-nav">
-    <h2>Ocean View Resort</h2>
-    <div class="user-info">
-        <a href="dashboard.jsp" class="nav-link">Home</a>
-        <a href="logoutServlet" class="logout-btn">Logout</a>
-    </div>
-</div>
+<jsp:include page="header.jsp" />
+
+<div class="dashboard-wrapper"></div>
 
 <div class="dashboard-container" style="flex-direction: column; align-items: center;">
     <div class="form-glass-box" style="max-width: 800px;">
@@ -52,5 +48,7 @@
         </div>
     </div>
 </div>
+
+<jsp:include page="footer.jsp" />
 </body>
 </html>

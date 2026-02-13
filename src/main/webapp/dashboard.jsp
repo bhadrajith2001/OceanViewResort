@@ -198,5 +198,27 @@
 
 </div>
 
+<script>
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+
+
+    if (status === 'success') {
+        alert("✅ SUCCESS!\n\nNew Reservation has been saved successfully!");
+
+
+        window.history.replaceState(null, null, window.location.pathname);
+    }
+    else if (status === 'deleted') {
+        alert("🗑️ DELETED!\n\nReservation removed successfully.");
+        window.history.replaceState(null, null, window.location.pathname);
+    }
+</script>
+</body>
+</html>
+
+<jsp:include page="footer.jsp" />
+
 </body>
 </html>
