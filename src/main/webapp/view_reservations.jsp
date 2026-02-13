@@ -62,8 +62,10 @@
                     <td><%= r.getCheckOut() %></td>
                     <td style="font-weight: bold; color: #2ed573;">Rs. <%= String.format("%,.2f", r.getTotalBill()) %></td>
                     <td>
-                        <a href="bill.jsp?id=<%=r.getId()%>&name=<%=r.getGuestName()%>&room=<%=r.getRoomType()%>&in=<%=r.getCheckIn()%>&out=<%=r.getCheckOut()%>&total=<%=r.getTotalBill()%>"
-                           class="bill-btn" target="_blank">Bill</a>
+                        <a href="GenerateBillServlet?id=<%=r.getId()%>&name=<%=r.getGuestName()%>&room=<%=r.getRoomType()%>&in=<%=r.getCheckIn()%>&out=<%=r.getCheckOut()%>&total=<%=String.format("%,.2f", r.getTotalBill())%>"
+                           class="bill-btn">
+                            Bill
+                        </a>
                         <a href="deleteReservationServlet?id=<%=r.getId()%>"
                            class="delete-btn" onclick="return confirm('Delete this reservation?');">Del</a>
                     </td>

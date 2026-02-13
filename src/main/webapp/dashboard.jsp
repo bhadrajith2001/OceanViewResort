@@ -17,9 +17,6 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-        /* --- Dashboard Layout Styles --- */
-
-
         .dashboard-wrapper {
             display: flex;
             gap: 30px;
@@ -29,11 +26,9 @@
             align-items: flex-start;
         }
 
-
         .action-panel {
             flex: 2;
         }
-
 
         .stats-panel {
             flex: 1;
@@ -43,7 +38,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             backdrop-filter: blur(10px);
         }
-
 
         .card-grid {
             display: grid;
@@ -157,6 +151,7 @@
         <p style="color: #777; font-size: 13px; margin-bottom: 25px;">Real-time Data</p>
 
         <%
+            // Existing Reservation Logic
             ReservationDAO dao = new ReservationDAO();
             List<Reservation> list = dao.getAllReservations();
 
@@ -190,6 +185,16 @@
             <h1 style="margin: 0; color: #1565c0; font-size: 32px;"><%= activeBookings %></h1>
         </div>
 
+        <%
+            // Bill DAO Logic inserted here
+            com.oceanview.dao.BillDAO billDao = new com.oceanview.dao.BillDAO();
+            int billCount = billDao.getTotalBillsCount();
+        %>
+        <div class="stat-box" style="background: #fff3e0; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+            <h4 style="margin: 0; color: #e67e22;">Total Bills Issued</h4>
+            <h1 style="margin: 5px 0; color: #d35400; font-size: 32px;"><%= billCount %></h1>
+            <p style="margin: 0; font-size: 12px; color: #e67e22;">Saved in database</p>
+        </div>
         <div>
             <h4 style="margin: 0; color: #43a047;">Total Revenue</h4>
             <h2 style="margin: 5px 0; color: #2e7d32; font-size: 24px;">Rs. <%= String.format("%,.0f", totalRevenue) %></h2>
@@ -199,15 +204,11 @@
 </div>
 
 <script>
-
     const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get('status');
 
-
     if (status === 'success') {
         alert("✅ SUCCESS!\n\nNew Reservation has been saved successfully!");
-
-
         window.history.replaceState(null, null, window.location.pathname);
     }
     else if (status === 'deleted') {
@@ -215,8 +216,6 @@
         window.history.replaceState(null, null, window.location.pathname);
     }
 </script>
-</body>
-</html>
 
 <jsp:include page="footer.jsp" />
 
