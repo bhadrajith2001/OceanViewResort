@@ -73,6 +73,28 @@ public class ReservationDAO {
         }
     }
 
-    
+    // Double Booking Validation
+    public boolean isRoomAvailable(String roomType, String checkIn, String checkOut) {
+
+        String query = "SELECT COUNT(*) FROM reservations WHERE room_type = ? AND check_in_date < ? AND check_out_date > ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, roomType);
+            stmt.setString(2, checkOut); // අලුත් Check-out දිනය
+            stmt.setString(3, checkIn);  // අලුත් Check-in දිනය
+
+            java.sql.ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count == 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }

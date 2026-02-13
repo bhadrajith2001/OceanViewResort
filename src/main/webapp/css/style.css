@@ -292,37 +292,62 @@ form > .input-group {
     box-shadow: 0 10px 25px rgba(44, 161, 189, 0.5);
 }
 
-/* Table Styles */
+/* --- Table Styles --- */
 
 .table-glass-box {
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(20px);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 30px;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
     width: 100%;
     margin-top: 30px;
-    color: #fff;
+    overflow-x: auto;
 }
 
 .styled-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
-.styled-table th, .styled-table td {
-    padding: 15px;
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: #e0e0e0;
 }
 
-.styled-table th {
-    background-color: rgba(44, 161, 189, 0.3);
-    color: #2ca1bd;
-    font-weight: 600;
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+    transition: all 0.3s ease;
+}
+
+.styled-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: scale(1.01);
+}
+
+/* Badge Style */
+.badge {
+    background: #ff9f43;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .bill-btn

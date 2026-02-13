@@ -76,6 +76,31 @@
     </div>
 </div>
 
+<input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for names..."
+       style="padding: 10px; width: 300px; border-radius: 5px; border: none; margin-bottom: 10px;">
+
+<script>
+    function searchTable() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.querySelector(".styled-table");
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
 <div class="table-glass-box" style="margin-top: 30px;">
     <h3>Current Reservations</h3>
     <table class="styled-table">
@@ -156,6 +181,23 @@
 
         return isValid;
     }
+
+    // URL status Message
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+
+    if (status === 'success') {
+        alert("Reservation Added Successfully! 🎉");
+
+        window.history.replaceState(null, null, window.location.pathname);
+    } else if (status === 'unavailable') {
+        alert("⚠️ Sorry! This Room is ALREADY BOOKED for these dates.\nPlease select a different date or room type.");
+        window.history.replaceState(null, null, window.location.pathname);
+    } else if (status === 'deleted') {
+        alert("Reservation Deleted Successfully! 🗑️");
+        window.history.replaceState(null, null, window.location.pathname);
+    }
+
 </script>
 </body>
 </html>

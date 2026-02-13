@@ -12,7 +12,6 @@ import java.io.IOException;
 public class AddReservationServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String name = request.getParameter("guestName");
         String address = request.getParameter("address");
         String contact = request.getParameter("contactNumber");
@@ -21,14 +20,22 @@ public class AddReservationServlet extends HttpServlet {
         String checkOut = request.getParameter("checkOutDate");
 
         ReservationDAO dao = new ReservationDAO();
-        boolean isSuccess = dao.addReservation(name, address, contact, roomType, checkIn, checkOut);
 
-        if (isSuccess) {
-            //dashboard success message
-            response.sendRedirect("dashboard.jsp?status=success");
+
+        if (dao.isRoomAvailable(roomType, checkIn, checkOut)) {
+
+
+            boolean isSuccess = dao.addReservation(name, address, contact, roomType, checkIn, checkOut);
+
+            if (isSuccess) {
+                response.sendRedirect("dashboard.jsp?status=success");
+            } else {
+                response.sendRedirect("dashboard.jsp?status=error");
+            }
+
         } else {
-            //error message
-            response.sendRedirect("dashboard.jsp?status=error");
+
+            response.sendRedirect("dashboard.jsp?status=unavailable");
         }
     }
 }
