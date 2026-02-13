@@ -1,8 +1,10 @@
+<%@ page import="com.oceanview.dao.ReservationDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.oceanview.models.Reservation" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-
     if (session.getAttribute("loggedUser") == null) {
-        response.sendRedirect("index.html?error=unauthorized");
+        response.sendRedirect("index.html");
         return;
     }
 %>
@@ -10,194 +12,191 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Add Reservation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Dashboard - Ocean View Resort</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* --- Dashboard Layout Styles --- */
+
+
+        .dashboard-wrapper {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            align-items: flex-start;
+        }
+
+
+        .action-panel {
+            flex: 2;
+        }
+
+
+        .stats-panel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Dashboard Card Design */
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            padding: 30px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: #2ca1bd;
+        }
+
+        .icon-circle {
+            background: rgba(44, 161, 189, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(44, 161, 189, 0.5);
+        }
+
+        .dashboard-card h3 { font-size: 20px; margin-bottom: 5px; color: #fff; }
+        .dashboard-card p { font-size: 13px; color: #ddd; margin: 0; }
+
+        /*RESPONSIVE CODE*/
+        @media (max-width: 900px) {
+            .dashboard-wrapper {
+                flex-direction: column;
+            }
+            .action-panel, .stats-panel {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body class="dashboard-body">
 
-<div class="navbar glass-nav">
+<div class="glass-nav">
     <h2>Ocean View Resort</h2>
     <div class="user-info">
-        <span>Welcome, <b><%= session.getAttribute("loggedUser") %></b> (<%= session.getAttribute("role") %>)</span>
+        <span>Welcome, <b><%= session.getAttribute("loggedUser") %></b></span>
         <a href="logoutServlet" class="logout-btn">Logout</a>
     </div>
 </div>
 
-<div class="dashboard-container">
-    <div class="form-glass-box">
-        <h3>Add New Reservation</h3>
-        <form id="reservationForm" action="addReservationServlet" method="POST" onsubmit="return validateForm()">
+<div class="dashboard-wrapper">
 
-            <div class="form-row">
-                <div class="input-group">
-                    <label>Guest Name</label>
-                    <input type="text" name="guestName" id="guestName" required placeholder="Enter full name">
-                </div>
-                <div class="input-group">
-                    <label>Contact Number</label>
-                    <input type="text" name="contactNumber" id="contactNumber" required placeholder="07XXXXXXXX">
-                    <small id="phoneError" style="color: #ff6b6b; display: none;">Must be exactly 10 digits!</small>
-                </div>
-            </div>
+    <div class="action-panel">
+        <h2 style="color: white; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">Quick Actions</h2>
 
-            <div class="input-group">
-                <label>Address</label>
-                <input type="text" name="address" required placeholder="Enter full address">
-            </div>
+        <div class="card-grid">
+            <a href="add_reservation.jsp" class="dashboard-card">
+                <div class="icon-circle">➕</div>
+                <h3>Add Reservation</h3>
+                <p>Create a new booking</p>
+            </a>
 
-            <div class="form-row">
-                <div class="input-group">
-                    <label>Room Type</label>
-                    <select name="roomType" required>
-                        <option value="Single">Standard Room (RS. 10,000/night)</option>
-                        <option value="Double">Double Room (Rs. 18,000/night)</option>
-                        <option value="Deluxe">Deluxe Suite (Rs. 30,000/night)</option>
-                        <option value="Suite">Ocean View Suite (Rs. 50,000/night)</option>
-                    </select>
-                </div>
-            </div>
+            <a href="view_reservations.jsp" class="dashboard-card">
+                <div class="icon-circle">🔍</div>
+                <h3>View Reservations</h3>
+                <p>Search & Manage</p>
+            </a>
 
-            <div class="form-row">
-                <div class="input-group">
-                    <label>Check-in Date</label>
-                    <input type="date" name="checkInDate" id="checkInDate" required>
-                </div>
-                <div class="input-group">
-                    <label>Check-out Date</label>
-                    <input type="date" name="checkOutDate" id="checkOutDate" required>
-                    <small id="dateError" style="color: #ff6b6b; display: none;">Check-out must be after Check-in!</small>
-                </div>
-            </div>
+            <a href="view_reservations.jsp" class="dashboard-card">
+                <div class="icon-circle">🧾</div>
+                <h3>Generate Bill</h3>
+                <p>Print invoices</p>
+            </a>
 
-            <button type="submit" class="submit-btn">Save Reservation</button>
-        </form>
+            <a href="help.jsp" class="dashboard-card">
+                <div class="icon-circle">❓</div>
+                <h3>Help & Guide</h3>
+                <p>Instructions</p>
+            </a>
+        </div>
     </div>
-</div>
 
-<input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for names..."
-       style="padding: 10px; width: 300px; border-radius: 5px; border: none; margin-bottom: 10px;">
+    <div class="stats-panel">
+        <h3 style="color: #333; margin-bottom: 5px;">Live Statistics</h3>
+        <p style="color: #777; font-size: 13px; margin-bottom: 25px;">Real-time Data</p>
 
-<script>
-    function searchTable() {
-        var input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("searchInput");
-        filter = input.value.toUpperCase();
-        table = document.querySelector(".styled-table");
-        tr = table.getElementsByTagName("tr");
+        <%
+            ReservationDAO dao = new ReservationDAO();
+            List<Reservation> list = dao.getAllReservations();
 
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[1];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
+            int totalBookings = 0;
+            int activeBookings = 0;
+            double totalRevenue = 0.0;
+
+            java.time.LocalDate today = java.time.LocalDate.now();
+
+            if (list != null) {
+                totalBookings = list.size();
+                for (Reservation r : list) {
+                    totalRevenue += r.getTotalBill();
+                    try {
+                        java.time.LocalDate outDate = java.time.LocalDate.parse(r.getCheckOut());
+                        if (outDate.isAfter(today) || outDate.isEqual(today)) {
+                            activeBookings++;
+                        }
+                    } catch (Exception e) {}
                 }
             }
-        }
-    }
-</script>
-
-<div class="table-glass-box" style="margin-top: 30px;">
-    <h3>Current Reservations</h3>
-    <table class="styled-table">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Guest Name</th>
-            <th>Room Type</th>
-            <th>Check-In</th>
-            <th>Check-Out</th>
-            <th>Total Bill (Rs.)</th>
-            <th>Action</th> </tr>
-        </thead>
-        <tbody>
-        <%
-            com.oceanview.dao.ReservationDAO dao = new com.oceanview.dao.ReservationDAO();
-            java.util.List<com.oceanview.models.Reservation> list = dao.getAllReservations();
-
-            if(list != null) {
-                for(com.oceanview.models.Reservation r : list) {
-
-                    String totalFormatted = String.format("%,.2f", r.getTotalBill());
         %>
-        <tr>
-            <td><%= r.getId() %></td>
-            <td><%= r.getGuestName() %></td>
-            <td><span class="badge"><%= r.getRoomType() %></span></td>
-            <td><%= r.getCheckIn() %></td>
-            <td><%= r.getCheckOut() %></td>
-            <td style="font-weight: bold; color: #2ed573;">Rs. <%= totalFormatted %></td>
 
-            <td>
-                <a href="bill.jsp?id=<%=r.getId()%>&name=<%=r.getGuestName()%>&room=<%=r.getRoomType()%>&in=<%=r.getCheckIn()%>&out=<%=r.getCheckOut()%>&total=<%=totalFormatted%>"
-                   class="bill-btn" target="_blank">View Bill</a>
+        <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+            <h4 style="margin: 0; color: #555;">Total Reservations</h4>
+            <h1 style="margin: 0; color: #2f3542; font-size: 32px;"><%= totalBookings %></h1>
+        </div>
 
-                <a href="deleteReservationServlet?id=<%=r.getId()%>"
-                   class="delete-btn"
-                   onclick="return confirm('Are you sure you want to delete this reservation?');">
-                    Delete
-                </a>
+        <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+            <h4 style="margin: 0; color: #1e88e5;">Active Reservations</h4>
+            <h1 style="margin: 0; color: #1565c0; font-size: 32px;"><%= activeBookings %></h1>
+        </div>
 
-            </td>
-        </tr>
-        <%      }
-        } %>
-        </tbody>
-    </table>
+        <div>
+            <h4 style="margin: 0; color: #43a047;">Total Revenue</h4>
+            <h2 style="margin: 5px 0; color: #2e7d32; font-size: 24px;">Rs. <%= String.format("%,.0f", totalRevenue) %></h2>
+        </div>
+    </div>
+
 </div>
 
-<script>
-
-    let today = new Date().toISOString().split('T')[0];
-    document.getElementById("checkInDate").setAttribute('min', today);
-    document.getElementById("checkOutDate").setAttribute('min', today);
-
-    function validateForm() {
-        let isValid = true;
-
-
-        let phone = document.getElementById("contactNumber").value;
-        let phoneRegex = /^[0-9]{10}$/;
-        if (!phone.match(phoneRegex)) {
-            document.getElementById("phoneError").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("phoneError").style.display = "none";
-        }
-
-
-        let checkIn = document.getElementById("checkInDate").value;
-        let checkOut = document.getElementById("checkOutDate").value;
-        if (checkIn && checkOut && checkOut <= checkIn) {
-            document.getElementById("dateError").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("dateError").style.display = "none";
-        }
-
-        return isValid;
-    }
-
-    // URL status Message
-    const urlParams = new URLSearchParams(window.location.search);
-    const status = urlParams.get('status');
-
-    if (status === 'success') {
-        alert("Reservation Added Successfully! 🎉");
-
-        window.history.replaceState(null, null, window.location.pathname);
-    } else if (status === 'unavailable') {
-        alert("⚠️ Sorry! This Room is ALREADY BOOKED for these dates.\nPlease select a different date or room type.");
-        window.history.replaceState(null, null, window.location.pathname);
-    } else if (status === 'deleted') {
-        alert("Reservation Deleted Successfully! 🗑️");
-        window.history.replaceState(null, null, window.location.pathname);
-    }
-
-</script>
 </body>
 </html>

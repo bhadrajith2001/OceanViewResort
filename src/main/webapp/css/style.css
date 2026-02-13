@@ -380,3 +380,32 @@ form > .input-group {
 .delete-btn:hover {
     background: #ff6b81;
 }
+
+/* --- Search Bar Styles --- */
+.search-box {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+#searchInput {
+    padding: 12px 20px;
+    width: 300px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#searchInput:focus {
+    background: rgba(0, 0, 0, 0.5);
+    width: 320px; /* click කළාම ටිකක් දිග වැඩි වෙනවා (Animation) */
+    box-shadow: 0 0 10px rgba(44, 161, 189, 0.5);
+    border-color: #2ca1bd;
+}

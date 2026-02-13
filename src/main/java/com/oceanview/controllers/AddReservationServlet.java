@@ -23,19 +23,18 @@ public class AddReservationServlet extends HttpServlet {
 
 
         if (dao.isRoomAvailable(roomType, checkIn, checkOut)) {
-
-
             boolean isSuccess = dao.addReservation(name, address, contact, roomType, checkIn, checkOut);
 
             if (isSuccess) {
-                response.sendRedirect("dashboard.jsp?status=success");
+
+                response.sendRedirect("view_reservations.jsp?status=success");
             } else {
-                response.sendRedirect("dashboard.jsp?status=error");
+                response.sendRedirect("add_reservation.jsp?status=error");
             }
 
         } else {
 
-            response.sendRedirect("dashboard.jsp?status=unavailable");
+            response.sendRedirect("add_reservation.jsp?status=unavailable");
         }
     }
 }
