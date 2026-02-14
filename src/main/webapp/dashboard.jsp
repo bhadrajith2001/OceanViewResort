@@ -1,6 +1,7 @@
 <%@ page import="com.oceanview.dao.ReservationDAO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.oceanview.models.Reservation" %>
+<%@ page import="com.oceanview.dao.BillDAO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     if (session.getAttribute("loggedUser") == null) {
@@ -12,7 +13,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Dashboard - Ocean View Resort</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Ocean View Resort</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 
@@ -26,10 +28,7 @@
             align-items: flex-start;
         }
 
-        .action-panel {
-            flex: 2;
-        }
-
+        .action-panel { flex: 2; }
         .stats-panel {
             flex: 1;
             background: rgba(255, 255, 255, 0.9);
@@ -45,7 +44,6 @@
             gap: 20px;
         }
 
-        /* Dashboard Card Design */
         .dashboard-card {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(15px);
@@ -86,33 +84,15 @@
 
         .dashboard-card h3 { font-size: 20px; margin-bottom: 5px; color: #fff; }
         .dashboard-card p { font-size: 13px; color: #ddd; margin: 0; }
+        .stat-item { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
-        /*RESPONSIVE CODE*/
-        @media (max-width: 900px) {
-            .dashboard-wrapper {
-                flex-direction: column;
-            }
-            .action-panel, .stats-panel {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        @media (max-width: 900px) { .dashboard-wrapper { flex-direction: column; } .action-panel, .stats-panel { width: 100%; } }
+        @media (max-width: 600px) { .card-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body class="dashboard-body">
 
-<div class="glass-nav">
-    <h2>Ocean View Resort</h2>
-    <div class="user-info">
-        <span>Welcome, <b><%= session.getAttribute("loggedUser") %></b></span>
-        <a href="logoutServlet" class="logout-btn">Logout</a>
-    </div>
-</div>
+<jsp:include page="header.jsp" />
 
 <div class="dashboard-wrapper">
 
@@ -126,13 +106,13 @@
                 <p>Create a new booking</p>
             </a>
 
-            <a href="view_reservations.jsp" class="dashboard-card">
+            <a href="view_reservations.jsp?type=view" class="dashboard-card">
                 <div class="icon-circle">🔍</div>
                 <h3>View Reservations</h3>
                 <p>Search & Manage</p>
             </a>
 
-            <a href="view_reservations.jsp" class="dashboard-card">
+            <a href="view_reservations.jsp?type=bill" class="dashboard-card">
                 <div class="icon-circle">🧾</div>
                 <h3>Generate Bill</h3>
                 <p>Print invoices</p>
@@ -151,12 +131,14 @@
         <p style="color: #777; font-size: 13px; margin-bottom: 25px;">Real-time Data</p>
 
         <%
-            // Existing Reservation Logic
             ReservationDAO dao = new ReservationDAO();
             List<Reservation> list = dao.getAllReservations();
+            BillDAO billDao = new BillDAO();
 
             int totalBookings = 0;
             int activeBookings = 0;
+            int cancelledBookings = 0;
+            int billCount = billDao.getTotalBillsCount();
             double totalRevenue = 0.0;
 
             java.time.LocalDate today = java.time.LocalDate.now();
@@ -164,43 +146,47 @@
             if (list != null) {
                 totalBookings = list.size();
                 for (Reservation r : list) {
-                    totalRevenue += r.getTotalBill();
-                    try {
-                        java.time.LocalDate outDate = java.time.LocalDate.parse(r.getCheckOut());
-                        if (outDate.isAfter(today) || outDate.isEqual(today)) {
-                            activeBookings++;
-                        }
-                    } catch (Exception e) {}
+                    if ("Cancelled".equals(r.getStatus())) {
+                        cancelledBookings++;
+                    } else {
+                        totalRevenue += r.getTotalBill();
+                        try {
+                            java.time.LocalDate outDate = java.time.LocalDate.parse(r.getCheckOut());
+                            if (outDate.isAfter(today) || outDate.isEqual(today)) {
+                                activeBookings++;
+                            }
+                        } catch (Exception e) {}
+                    }
                 }
             }
         %>
 
-        <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <div class="stat-item">
             <h4 style="margin: 0; color: #555;">Total Reservations</h4>
             <h1 style="margin: 0; color: #2f3542; font-size: 32px;"><%= totalBookings %></h1>
         </div>
 
-        <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <div class="stat-item">
+            <h4 style="margin: 0; color: #c0392b;">Cancelled Reservations</h4>
+            <h1 style="margin: 0; color: #e74c3c; font-size: 32px;"><%= cancelledBookings %></h1>
+            <p style="margin: 0; font-size: 11px; color: #e74c3c;">Excluded from revenue</p>
+        </div>
+
+        <div class="stat-item">
             <h4 style="margin: 0; color: #1e88e5;">Active Reservations</h4>
             <h1 style="margin: 0; color: #1565c0; font-size: 32px;"><%= activeBookings %></h1>
         </div>
 
-        <%
-            // Bill DAO Logic inserted here
-            com.oceanview.dao.BillDAO billDao = new com.oceanview.dao.BillDAO();
-            int billCount = billDao.getTotalBillsCount();
-        %>
-        <div class="stat-box" style="background: #fff3e0; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-            <h4 style="margin: 0; color: #e67e22;">Total Bills Issued</h4>
+        <div class="stat-box" style="background: #fff3e0; padding: 15px; border-radius: 15px; margin-bottom: 20px;">
+            <h4 style="margin: 0; color: #e67e22;">Bills Issued</h4>
             <h1 style="margin: 5px 0; color: #d35400; font-size: 32px;"><%= billCount %></h1>
-            <p style="margin: 0; font-size: 12px; color: #e67e22;">Saved in database</p>
         </div>
+
         <div>
             <h4 style="margin: 0; color: #43a047;">Total Revenue</h4>
             <h2 style="margin: 5px 0; color: #2e7d32; font-size: 24px;">Rs. <%= String.format("%,.0f", totalRevenue) %></h2>
         </div>
     </div>
-
 </div>
 
 <script>
@@ -210,14 +196,12 @@
     if (status === 'success') {
         alert("✅ SUCCESS!\n\nNew Reservation has been saved successfully!");
         window.history.replaceState(null, null, window.location.pathname);
-    }
-    else if (status === 'deleted') {
+    } else if (status === 'deleted') {
         alert("🗑️ DELETED!\n\nReservation removed successfully.");
         window.history.replaceState(null, null, window.location.pathname);
     }
 </script>
 
 <jsp:include page="footer.jsp" />
-
 </body>
 </html>

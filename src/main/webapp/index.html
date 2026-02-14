@@ -3,30 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ocean View Resort - Login</title>
+    <title>Login - Ocean View Resort</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* --- General Styles --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Ocean Night Gradient */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* --- Background Shapes (Decorative) --- */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            z-index: 0;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .c1 { width: 200px; height: 200px; top: 10%; left: 10%; }
+        .c2 { width: 300px; height: 300px; bottom: 10%; right: 5%; animation-delay: 2s; }
+        .c3 { width: 100px; height: 100px; top: 50%; left: 80%; animation-delay: 4s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- Login Box (Glassmorphism) --- */
+        .login-container {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 350px;
+            transition: transform 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: scale(1.02);
+        }
+
+        .login-container h2 {
+            margin: 0 0 5px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .login-container p {
+            margin: 0 0 30px;
+            font-size: 12px;
+            color: #ddd;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- Input Fields --- */
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .input-group input:focus {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: #2ca1bd;
+            box-shadow: 0 0 10px rgba(44, 161, 189, 0.5);
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* --- Login Button --- */
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(90deg, #2ca1bd, #2ed573);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(44, 161, 189, 0.4);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(44, 161, 189, 0.6);
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Error Message Style */
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-<div class="login-wrapper">
-    <div class="login-glass-box">
-        <h2>Welcome Back!</h2>
-        <p>Ocean View Resort Reservation System</p>
 
-        <form id="loginForm" action="loginServlet" method="POST">
-            <div class="input-group">
-                <input type="text" name="username" required placeholder="Username">
-            </div>
-            <div class="input-group">
-                <input type="password" name="password" required placeholder="Password">
-            </div>
-            <button type="submit" class="login-btn">Login</button>
-        </form>
+<div class="circle c1"></div>
+<div class="circle c2"></div>
+<div class="circle c3"></div>
 
-        <div class="help-link">
-            <a href="#">Need Help?</a>
+<div class="login-container">
+    <div style="font-size: 40px; margin-bottom: 10px;">🌊</div>
+    <h2>Ocean View</h2>
+    <p>Management Portal</p>
+
+    <form action="loginServlet" method="POST">
+        <div class="input-group">
+            <input type="text" name="username" placeholder="Username" required>
         </div>
+
+        <div class="input-group">
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+
+        <button type="submit" class="login-btn">Secure Login</button>
+
+        <div id="errorText" class="error-msg">❌ Invalid Username or Password!</div>
+    </form>
+
+    <div class="footer-text">
+        Authorized Personnel Only (Admin & Staff)<br>
+        &copy; 2026 Ocean View Resort
     </div>
 </div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('error') === 'true') {
+        document.getElementById("errorText").style.display = "block";
+    }
+</script>
+
 </body>
 </html>
