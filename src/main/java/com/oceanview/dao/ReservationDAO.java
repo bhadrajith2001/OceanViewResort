@@ -1,12 +1,17 @@
 package com.oceanview.dao;
 
 import com.oceanview.utils.DBConnection;
+import com.oceanview.models.Reservation; // Model එක Import කළා
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReservationDAO {
 
+    // 1. Add Reservation
     public boolean addReservation(String name, String address, String contact, String roomType, String checkIn, String checkOut) {
         String query = "INSERT INTO reservations (guest_name, address, contact_number, room_type, check_in_date, check_out_date) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -20,10 +25,8 @@ public class ReservationDAO {
             stmt.setString(5, checkIn);
             stmt.setString(6, checkOut);
 
-
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
-
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -31,13 +34,14 @@ public class ReservationDAO {
         }
     }
 
-    public java.util.List<com.oceanview.models.Reservation> getAllReservations() {
-        java.util.List<com.oceanview.models.Reservation> list = new java.util.ArrayList<>();
+    // 2. Get All Reservations
+    public List<Reservation> getAllReservations() {
+        List<Reservation> list = new ArrayList<>();
         String query = "SELECT * FROM reservations ORDER BY reservation_no DESC";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
-             java.sql.ResultSet rs = stmt.executeQuery()) {
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 int id = rs.getInt("reservation_no");
@@ -47,7 +51,16 @@ public class ReservationDAO {
                 String outDate = rs.getString("check_out_date");
                 String contact = rs.getString("contact_number");
 
-                list.add(new com.oceanview.models.Reservation(id, name, room, inDate, outDate, contact));
+
+                String status = rs.getString("status");
+
+
+                Reservation r = new Reservation(id, name, room, inDate, outDate, contact);
+
+
+                r.setStatus(status);
+
+                list.add(r);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -55,8 +68,7 @@ public class ReservationDAO {
         return list;
     }
 
-    //Delete booking
-
+    // 3. Delete Reservation
     public boolean deleteReservation(int id) {
         String query = "DELETE FROM reservations WHERE reservation_no = ?";
 
@@ -73,22 +85,23 @@ public class ReservationDAO {
         }
     }
 
-    // Double Booking Validation
+    // 4. Room Availability Check
     public boolean isRoomAvailable(String roomType, String checkIn, String checkOut) {
 
-        String query = "SELECT COUNT(*) FROM reservations WHERE room_type = ? AND check_in_date < ? AND check_out_date > ?";
+        // ✅ Status not 'Cancelled'then Count
+        String query = "SELECT COUNT(*) FROM reservations WHERE room_type = ? AND check_in_date < ? AND check_out_date > ? AND status != 'Cancelled'";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, roomType);
-            stmt.setString(2, checkOut); // අලුත් Check-out දිනය
-            stmt.setString(3, checkIn);  // අලුත් Check-in දිනය
+            stmt.setString(2, checkOut);
+            stmt.setString(3, checkIn);
 
-            java.sql.ResultSet rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 int count = rs.getInt(1);
-                return count == 0;
+                return count == 0; // Count 0(Available)
             }
 
         } catch (SQLException e) {
@@ -97,4 +110,19 @@ public class ReservationDAO {
         return false;
     }
 
+    //Cancel Reservation
+    public boolean cancelReservation(int id) {
+        String query = "UPDATE reservations SET status = 'Cancelled' WHERE reservation_no = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

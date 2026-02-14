@@ -39,11 +39,9 @@
                     <th>ID</th>
                     <th>Guest Name</th>
                     <th>Contact</th>
-                    <th>Room Type</th>
-                    <th>Check-In</th>
-                    <th>Check-Out</th>
-                    <th>Total Bill</th>
-                    <th>Actions</th>
+                    <th>Room</th>
+                    <th>Dates</th>
+                    <th>Status</th> <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -52,22 +50,40 @@
                     java.util.List<com.oceanview.models.Reservation> list = dao.getAllReservations();
                     if(list != null) {
                         for(com.oceanview.models.Reservation r : list) {
+                            // Status color
+                            String statusColor = "green";
+                            if("Cancelled".equals(r.getStatus())) {
+                                statusColor = "red";
+                            }
                 %>
                 <tr>
                     <td><%= r.getId() %></td>
                     <td><%= r.getGuestName() %></td>
                     <td><%= r.getContact() %></td>
                     <td><span class="badge"><%= r.getRoomType() %></span></td>
-                    <td><%= r.getCheckIn() %></td>
-                    <td><%= r.getCheckOut() %></td>
-                    <td style="font-weight: bold; color: #2ed573;">Rs. <%= String.format("%,.2f", r.getTotalBill()) %></td>
+                    <td>
+                        <div style="font-size: 11px; color: #ccc;">In: <%= r.getCheckIn() %></div>
+                        <div style="font-size: 11px; color: #ccc;">Out: <%= r.getCheckOut() %></div>
+                    </td>
+
+                    <td style="font-weight: bold; color: <%= statusColor %>;">
+                        <%= (r.getStatus() == null || r.getStatus().isEmpty()) ? "Confirmed" : r.getStatus() %>
+                    </td>
+
                     <td>
                         <a href="GenerateBillServlet?id=<%=r.getId()%>&name=<%=r.getGuestName()%>&room=<%=r.getRoomType()%>&in=<%=r.getCheckIn()%>&out=<%=r.getCheckOut()%>&total=<%=String.format("%,.2f", r.getTotalBill())%>"
-                           class="bill-btn">
-                            Bill
-                        </a>
+                           class="bill-btn" title="Print Bill">🧾</a>
+
+                        <% if(!"Cancelled".equals(r.getStatus())) { %>
+                        <a href="CancelReservationServlet?id=<%=r.getId()%>"
+                           class="delete-btn" style="background: #f39c12;"
+                           onclick="return confirm('Are you sure you want to CANCEL this booking?');"
+                           title="Cancel Booking">🚫</a>
+                        <% } %>
+
                         <a href="deleteReservationServlet?id=<%=r.getId()%>"
-                           class="delete-btn" onclick="return confirm('Delete this reservation?');">Del</a>
+                           class="delete-btn" title="Delete Permanently"
+                           onclick="return confirm('WARNING: This will permanently delete the record!');">🗑️</a>
                     </td>
                 </tr>
                 <% } } %>

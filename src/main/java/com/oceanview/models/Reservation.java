@@ -10,6 +10,8 @@ public class Reservation {
     private String checkIn;
     private String checkOut;
     private String contact;
+    private String status;
+
 
     public Reservation(int id, String guestName, String roomType, String checkIn, String checkOut, String contact) {
         this.id = id;
@@ -18,6 +20,7 @@ public class Reservation {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.contact = contact;
+        this.status = "Confiremed";
     }
 
     // Getters
@@ -28,6 +31,13 @@ public class Reservation {
     public String getCheckOut() { return checkOut; }
     public String getContact() { return contact; }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public double getTotalBill() {
         long days = 0;

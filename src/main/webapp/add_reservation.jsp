@@ -71,8 +71,6 @@
     </div>
 </div>
 
-<jsp:include page="footer.jsp" />
-
 <script>
 
     let today = new Date().toISOString().split('T')[0];
@@ -120,3 +118,5 @@
 
 </body>
 </html>
+
+<jsp:include page="footer.jsp" />
