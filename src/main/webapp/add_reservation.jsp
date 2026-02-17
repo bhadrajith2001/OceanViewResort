@@ -22,7 +22,10 @@
     <div class="form-glass-box">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <h3 style="margin: 0; text-transform: uppercase; letter-spacing: 1px;">ADD NEW RESERVATION</h3>
-            <a href="dashboard.jsp" style="color: #ddd; text-decoration: none; font-size: 12px;">← Back to Dashboard</a>
+
+            <a href="dashboard.jsp" style="color: #333; text-decoration: none; font-size: 12px; border: 1px solid #ccc; padding: 8px 15px; border-radius: 20px; background: #f9f9f9;">
+                ← Back to Dashboard
+            </a>
         </div>
 
         <form action="addReservationServlet" method="POST" onsubmit="return validateForm()">

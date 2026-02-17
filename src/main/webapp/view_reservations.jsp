@@ -38,7 +38,10 @@
 
             <div style="display: flex; gap: 10px; align-items: center;">
                 <a href="add_reservation.jsp" class="submit-btn" style="width: auto; margin: 0; padding: 8px 15px; font-size: 12px;">+ Add New</a>
-                <a href="dashboard.jsp" style="color: #ddd; text-decoration: none; font-size: 12px;">← Back</a>
+
+                <a href="dashboard.jsp" style="color: #333; text-decoration: none; font-size: 12px; border: 1px solid #ccc; padding: 8px 15px; border-radius: 20px; background: #f9f9f9;">
+                    ← Back to Dashboard
+                </a>
             </div>
         </div>
 
@@ -84,7 +87,7 @@
                         <%= (r.getStatus() == null || r.getStatus().isEmpty()) ? "Confirmed" : r.getStatus() %>
                     </td>
                     <td>
-                        <a href="GenerateBillServlet?id=<%=r.getId()%>&name=<%=r.getGuestName()%>&room=<%=r.getRoomType()%>&in=<%=r.getCheckIn()%>&out=<%=r.getCheckOut()%>&total=<%=String.format("%,.2f", r.getTotalBill())%>"
+                        <a href="bill.jsp?id=<%=r.getId()%>&name=<%=r.getGuestName()%>&room=<%=r.getRoomType()%>&in=<%=r.getCheckIn()%>&out=<%=r.getCheckOut()%>&total=<%=String.format("%,.2f", r.getTotalBill())%>"
                            class="bill-btn" title="Print Bill">🧾</a>
 
                         <% if(!"Cancelled".equals(r.getStatus())) { %>
