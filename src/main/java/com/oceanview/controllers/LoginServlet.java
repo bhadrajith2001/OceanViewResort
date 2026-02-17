@@ -2,7 +2,7 @@ package com.oceanview.controllers;
 
 import com.oceanview.dao.UserDAO;
 import com.oceanview.models.User;
-
+import com.oceanview.utils.MD5Utils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,17 +11,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-
 @WebServlet("/loginServlet")
 public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+
         String uname = request.getParameter("username");
         String pass = request.getParameter("password");
 
+
+        String hashedPassword = MD5Utils.getMd5(pass);
+
         UserDAO userDAO = new UserDAO();
-        User loggedInUser = userDAO.authenticateUser(uname, pass);
+
+
+        User loggedInUser = userDAO.authenticateUser(uname, hashedPassword);
 
         if (loggedInUser != null) {
             // Login Success!
