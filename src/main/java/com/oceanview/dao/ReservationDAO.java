@@ -37,7 +37,12 @@ public class ReservationDAO {
     // 2. Get All Reservations
     public List<Reservation> getAllReservations() {
         List<Reservation> list = new ArrayList<>();
-        String query = "SELECT * FROM reservations ORDER BY reservation_no DESC";
+
+
+        String query = "SELECT r.*, rr.price_per_night " +
+                "FROM reservations r " +
+                "JOIN room_rates rr ON r.room_type = rr.room_type " +
+                "ORDER BY r.reservation_no DESC";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
@@ -50,14 +55,13 @@ public class ReservationDAO {
                 String inDate = rs.getString("check_in_date");
                 String outDate = rs.getString("check_out_date");
                 String contact = rs.getString("contact_number");
-
-
                 String status = rs.getString("status");
 
 
-                Reservation r = new Reservation(id, name, room, inDate, outDate, contact);
+                double rate = rs.getDouble("price_per_night");
 
 
+                Reservation r = new Reservation(id, name, room, inDate, outDate, contact, rate);
                 r.setStatus(status);
 
                 list.add(r);

@@ -13,17 +13,20 @@ public class Reservation {
     private String status;
 
 
-    public Reservation(int id, String guestName, String roomType, String checkIn, String checkOut, String contact) {
+    private double dailyRate;
+
+    public Reservation(int id, String guestName, String roomType, String checkIn, String checkOut, String contact, double dailyRate) {
         this.id = id;
         this.guestName = guestName;
         this.roomType = roomType;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.contact = contact;
-        this.status = "Confiremed";
+        this.status = "Confirmed";
+        this.dailyRate = dailyRate;
     }
 
-    // Getters
+    // Getters & Setters
     public int getId() { return id; }
     public String getGuestName() { return guestName; }
     public String getRoomType() { return roomType; }
@@ -31,14 +34,13 @@ public class Reservation {
     public String getCheckOut() { return checkOut; }
     public String getContact() { return contact; }
 
-    public String getStatus() {
-        return status;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public double getDailyRate() { return dailyRate; }
+    public void setDailyRate(double dailyRate) { this.dailyRate = dailyRate; }
 
+    //Total Bill Calculation
     public double getTotalBill() {
         long days = 0;
         try {
@@ -49,21 +51,11 @@ public class Reservation {
             e.printStackTrace();
         }
 
-
         if (days <= 0) days = 1;
 
-        double rate = 0;
-        switch (roomType) {
-            case "Single": rate = 10000; break;
-            case "Double": rate = 18000; break;
-            case "Deluxe": rate = 30000; break;
-            case "Suite": rate = 50000; break;
-            default: rate = 15000; // Standard rate
-        }
 
-
-        double total = days * rate;
-        double tax = total * 0.10;
+        double total = days * dailyRate;
+        double tax = total * 0.10; // 10% Tax
         return total + tax;
     }
 }
